@@ -1,11 +1,11 @@
 [package]
-name = "rustdesk"
+name = "laladesk"
 version = "1.4.1"
 authors = ["rustdesk <info@rustdesk.com>"]
 edition = "2021"
 build= "build.rs"
-description = "RustDesk Remote Desktop"
-default-run = "rustdesk"
+description = "LalaDesk Remote Desktop"
+default-run = "laladesk"
 rust-version = "1.75"
 
 [lib]
@@ -193,9 +193,9 @@ exclude = ["vdi/host", "examples/custom_plugin"]
 
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2025 Purslane Ltd. All rights reserved."
-ProductName = "RustDesk"
-FileDescription = "RustDesk Remote Desktop"
-OriginalFilename = "rustdesk.exe"
+ProductName = "LalaDesk"
+FileDescription = "LalaDesk Remote Desktop"
+OriginalFilename = "laladesk.exe"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
 winres = "0.1"
