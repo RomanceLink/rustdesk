@@ -12,7 +12,7 @@ pub const FILE_CLIPBOARD_NAME: &'static str = "file-clipboard";
 pub const CLIPBOARD_INTERVAL: u64 = 333;
 
 // This format is used to store the flag in the clipboard.
-const RUSTDESK_CLIPBOARD_OWNER_FORMAT: &'static str = "dyn.com.rustdesk.owner";
+const RUSTDESK_CLIPBOARD_OWNER_FORMAT: &'static str = "dyn.com.laladesk.owner";
 
 // Add special format for Excel XML Spreadsheet
 const CLIPBOARD_FORMAT_EXCEL_XML_SPREADSHEET: &'static str = "XML Spreadsheet";
@@ -76,14 +76,14 @@ pub fn check_clipboard(
 }
 
 #[cfg(all(feature = "unix-file-copy-paste", target_os = "macos"))]
-pub fn is_file_url_set_by_rustdesk(url: &Vec<String>) -> bool {
+pub fn is_file_url_set_by_laladesk(url: &Vec<String>) -> bool {
     if url.len() != 1 {
         return false;
     }
     url.iter()
         .next()
         .map(|s| {
-            for prefix in &["file:///tmp/.rustdesk_", "//tmp/.rustdesk_"] {
+            for prefix in &["file:///tmp/.laladesk_", "//tmp/.laladesk_"] {
                 if s.starts_with(prefix) {
                     return s[prefix.len()..].parse::<uuid::Uuid>().is_ok();
                 }
@@ -287,8 +287,8 @@ impl ClipboardContext {
         //
         // This is a common case on Windows, so we retry here.
         // Related issues:
-        // https://github.com/rustdesk/rustdesk/issues/9263
-        // https://github.com/rustdesk/rustdesk/issues/9222#issuecomment-2329233175
+        // https://github.com/laladesk/laladesk/issues/9263
+        // https://github.com/laladesk/laladesk/issues/9222#issuecomment-2329233175
         for i in 0..CLIPBOARD_GET_MAX_RETRY {
             match self.inner.get_formats(formats) {
                 Ok(data) => {
@@ -383,13 +383,13 @@ impl ClipboardContext {
     }
 
     #[cfg(all(feature = "unix-file-copy-paste", target_os = "macos"))]
-    fn get_file_urls_set_by_rustdesk(
+    fn get_file_urls_set_by_laladesk(
         data: Vec<ClipboardData>,
         _side: ClipboardSide,
     ) -> Vec<String> {
         for item in data.into_iter() {
             if let ClipboardData::FileUrl(urls) = item {
-                if is_file_url_set_by_rustdesk(&urls) {
+                if is_file_url_set_by_laladesk(&urls) {
                     return urls;
                 }
             }
@@ -398,7 +398,7 @@ impl ClipboardContext {
     }
 
     #[cfg(all(feature = "unix-file-copy-paste", target_os = "linux"))]
-    fn get_file_urls_set_by_rustdesk(data: Vec<ClipboardData>, side: ClipboardSide) -> Vec<String> {
+    fn get_file_urls_set_by_laladesk(data: Vec<ClipboardData>, side: ClipboardSide) -> Vec<String> {
         let exclude_path =
             clipboard::platform::unix::fuse::get_exclude_paths(side == ClipboardSide::Client);
         data.into_iter()
@@ -418,7 +418,7 @@ impl ClipboardContext {
     fn try_empty_clipboard_files(&mut self, side: ClipboardSide) {
         let _lock = ARBOARD_MTX.lock().unwrap();
         if let Ok(data) = self.get_formats(&[ClipboardFormat::FileUrl]) {
-            let urls = Self::get_file_urls_set_by_rustdesk(data, side);
+            let urls = Self::get_file_urls_set_by_laladesk(data, side);
             if !urls.is_empty() {
                 // FIXME:
                 // The host-side clear file clipboard `let _ = self.inner.clear();`,
@@ -441,7 +441,7 @@ impl ClipboardContext {
                 #[cfg(target_os = "macos")]
                 let is_kde_x11 = false;
                 let clear_holder_text = if is_kde_x11 {
-                    "RustDesk placeholder to clear the file clipbard"
+                    "LaLaDesk placeholder to clear the file clipbard"
                 } else {
                     ""
                 }

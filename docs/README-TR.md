@@ -1,30 +1,30 @@
 
 <p align="center">
-  <img src="../res/logo-header.svg" alt="RustDesk - Uzak masaüstü uygulamanız"><br>
+  <img src="../res/logo-header.svg" alt="LaLaDesk - Uzak masaüstü uygulamanız"><br>
   <a href="#free-public-servers">Sunucular</a> •
   <a href="#raw-steps-to-build">Derleme</a> •
   <a href="#how-to-build-with-docker">Docker ile Derleme</a> •
   <a href="#file-structure">Dosya Yapısı</a> •
   <a href="#snapshot">Ekran Görüntüleri</a><br>
   [<a href="docs/README-UA.md">Українська</a>] | [<a href="docs/README-CS.md">česky</a>] | [<a href="docs/README-ZH.md">中文</a>] | [<a href="docs/README-HU.md">Magyar</a>] | [<a href="docs/README-ES.md">Español</a>] | [<a href="docs/README-FA.md">فارسی</a>] | [<a href="docs/README-FR.md">Français</a>] | [<a href="docs/README-DE.md">Deutsch</a>] | [<a href="docs/README-PL.md">Polski</a>] | [<a href="docs/README-ID.md">Indonesian</a>] | [<a href="docs/README-FI.md">Suomi</a>] | [<a href="docs/README-ML.md">മലയാളം</a>] | [<a href="docs/README-JP.md">日本語</a>] | [<a href="docs/README-NL.md">Nederlands</a>] | [<a href="docs/README-IT.md">Italiano</a>] | [<a href="docs/README-RU.md">Русский</a>] | [<a href="docs/README-PTBR.md">Português (Brasil)</a>] | [<a href="docs/README-EO.md">Esperanto</a>] | [<a href="docs/README-KR.md">한국어</a>] | [<a href="docs/README-AR.md">العربي</a>] | [<a href="docs/README-VN.md">Tiếng Việt</a>] | [<a href="docs/README-DA.md">Dansk</a>] | [<a href="docs/README-GR.md">Ελληνικά</a>]<br>
-  <b>README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">RustDesk UI</a> ve <a href="https://github.com/rustdesk/doc.rustdesk.com">RustDesk Belge</a>'sini ana dilinize çevirmemiz için yardımınıza ihtiyacımız var</b>
+  <b>README, <a href="https://github.com/laladesk/laladesk/tree/master/src/lang">LaLaDesk UI</a> ve <a href="https://github.com/laladesk/doc.laladesk.com">LaLaDesk Belge</a>'sini ana dilinize çevirmemiz için yardımınıza ihtiyacımız var</b>
 </p>
 
-Bizimle sohbet edin: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
+Bizimle sohbet edin: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/laladesk) | [Reddit](https://www.reddit.com/r/laladesk) | [YouTube](https://www.youtube.com/@laladesk)
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Geli%C5%9Fmi%C5%9F%20%C3%96zellikler-blue)](https://rustdesk.com/pricing.html)
+[![LaLaDesk Server Pro](https://img.shields.io/badge/LaLaDesk%20Server%20Pro-Geli%C5%9Fmi%C5%9F%20%C3%96zellikler-blue)](https://laladesk.com/pricing.html)
 
-Başka bir uzak masaüstü yazılımı daha, Rust dilinde yazılmış. Hemen kullanıma hazır, hiçbir yapılandırma gerektirmez. Verilerinizin tam kontrolünü elinizde tutarsınız ve güvenlikle ilgili endişeleriniz olmaz. Kendi buluş/iletme sunucumuzu kullanabilirsiniz, [kendi sunucunuzu kurabilirsiniz](https://rustdesk.com/server) veya [kendi buluş/iletme sunucunuzu yazabilirsiniz](https://github.com/rustdesk/rustdesk-server-demo).
+Başka bir uzak masaüstü yazılımı daha, Rust dilinde yazılmış. Hemen kullanıma hazır, hiçbir yapılandırma gerektirmez. Verilerinizin tam kontrolünü elinizde tutarsınız ve güvenlikle ilgili endişeleriniz olmaz. Kendi buluş/iletme sunucumuzu kullanabilirsiniz, [kendi sunucunuzu kurabilirsiniz](https://laladesk.com/server) veya [kendi buluş/iletme sunucunuzu yazabilirsiniz](https://github.com/laladesk/laladesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
-RustDesk, herkesten katkıyı kabul eder. Başlamak için [CONTRIBUTING.md](CONTRIBUTING-TR.md) belgesine göz atın.
+LaLaDesk, herkesten katkıyı kabul eder. Başlamak için [CONTRIBUTING.md](CONTRIBUTING-TR.md) belgesine göz atın.
 
-[**SSS**](https://github.com/rustdesk/rustdesk/wiki/FAQ)
+[**SSS**](https://github.com/laladesk/laladesk/wiki/FAQ)
 
-[**BİNARİ İNDİR**](https://github.com/rustdesk/rustdesk/releases)
+[**BİNARİ İNDİR**](https://github.com/laladesk/laladesk/releases)
 
-[**NİGHTLY DERLEME**](https://github.com/rustdesk/rustdesk/releases/tag/nightly)
+[**NİGHTLY DERLEME**](https://github.com/laladesk/laladesk/releases/tag/nightly)
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="F-Droid'de Alın"
@@ -53,7 +53,7 @@ Lütfen Sciter dinamik kütüphanesini kendiniz indirin.
 
 - `cargo run` komutunu çalıştırın.
 
-## [Derleme](https://rustdesk.com/docs/en/dev/build/)
+## [Derleme](https://laladesk.com/docs/en/dev/build/)
 
 ## Linux Üzerinde Derleme Nasıl Yapılır
 
@@ -113,8 +113,8 @@ cd
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
-git clone https://github.com/rustdesk/rustdesk
-cd rustdesk
+git clone https://github.com/laladesk/laladesk
+cd laladesk
 mkdir -p target/debug
 wget https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 mv libsciter-gtk.so target/debug
@@ -126,15 +126,15 @@ VCPKG_ROOT=$HOME/vcpkg cargo run
 Öncelikle deposunu klonlayın ve Docker konteynerini oluşturun:
 
 ```sh
-git clone https://github.com/rustdesk/rustdesk
-cd rustdesk
-docker build -t "rustdesk-builder" .
+git clone https://github.com/laladesk/laladesk
+cd laladesk
+docker build -t "laladesk-builder" .
 ```
 
 Ardından, uygulamayı derlemek için her seferinde aşağıdaki komutu çalıştırın:
 
 ```sh
-docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user/.cargo/git -v rustdesk-registry-cache:/home/user/.cargo/registry -e PUID="$(id -u)" -e PGID="$(id -g)" rustdesk-builder
+docker run --rm -it -v $PWD:/home/user/laladesk -v laladesk-git-cache:/home/user/.cargo/git -v laladesk-registry-cache:/home/user/.cargo/registry -e PUID="$(id -u)" -e PGID="$(id -g)" laladesk-builder
 ```
 
 İlk derleme, bağımlılıklar önbelleğe alınmadan önce daha uzun sürebilir, sonraki derlemeler daha hızlı olacaktır. Ayrıca, derleme komutuna isteğe bağlı argümanlar belirtmeniz gerekiyorsa, bunu
@@ -142,33 +142,33 @@ docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user
  komutun sonunda `<İSTEĞE BAĞLI-ARGÜMANLAR>` pozisyonunda yapabilirsiniz. Örneğin, optimize edilmiş bir sürümü derlemek isterseniz, yukarıdaki komutu çalıştırdıktan sonra `--release` ekleyebilirsiniz. Oluşan yürütülebilir dosya sisteminizdeki hedef klasöründe bulunacak ve şu komutla çalıştırılabilir:
 
 ```sh
-target/debug/rustdesk
+target/debug/laladesk
 ```
 
 Veya, yayın yürütülebilir dosyası çalıştırılıyorsa:
 
 ```sh
-target/release/rustdesk
+target/release/laladesk
 ```
 
-Lütfen bu komutları RustDesk deposunun kökünden çalıştırdığınızdan emin olun, aksi takdirde uygulama gereken kaynakları bulamayabilir. Ayrıca, `install` veya `run` gibi diğer cargo altkomutları şu anda bu yöntem aracılığıyla desteklenmemektedir, çünkü bunlar programı konteyner içinde kurar veya çalıştırır ve ana makinede değil.
+Lütfen bu komutları LaLaDesk deposunun kökünden çalıştırdığınızdan emin olun, aksi takdirde uygulama gereken kaynakları bulamayabilir. Ayrıca, `install` veya `run` gibi diğer cargo altkomutları şu anda bu yöntem aracılığıyla desteklenmemektedir, çünkü bunlar programı konteyner içinde kurar veya çalıştırır ve ana makinede değil.
  
 ## Dosya Yapısı
 
-- **[libs/hbb_common](https://github.com/rustdesk/rustdesk/tree/master/libs/hbb_common)**: video kodlayıcı, yapılandırma, tcp/udp sarmalayıcı, protobuf, dosya transferi için fs işlevleri ve diğer bazı yardımcı işlevler
-- **[libs/scrap](https://github.com/rustdesk/rustdesk/tree/master/libs/scrap)**: ekran yakalama
-- **[libs/enigo](https://github.com/rustdesk/rustdesk/tree/master/libs/enigo)**: platforma özgü klavye/fare kontrolü
-- **[src/ui](https://github.com/rustdesk/rustdesk/tree/master/src/ui)**: GUI
-- **[src/server](https://github.com/rustdesk/rustdesk/tree/master/src/server)**: ses/pasta/klavye/video hizmetleri ve ağ bağlantıları
-- **[src/client.rs](https://github.com/rustdesk/rustdesk/tree/master/src/client.rs)**: bir eş bağlantısı başlatır
-- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: [rustdesk-server](https://github.com/rustdesk/rustdesk-server) ile iletişim kurar, uzak doğrudan (TCP delik vurma) veya iletme bağlantısını bekler
-- **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: platforma özgü kod
-- **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: mobil için Flutter kodu
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/js)**: Flutter web istemcisi için JavaScript
+- **[libs/hbb_common](https://github.com/laladesk/laladesk/tree/master/libs/hbb_common)**: video kodlayıcı, yapılandırma, tcp/udp sarmalayıcı, protobuf, dosya transferi için fs işlevleri ve diğer bazı yardımcı işlevler
+- **[libs/scrap](https://github.com/laladesk/laladesk/tree/master/libs/scrap)**: ekran yakalama
+- **[libs/enigo](https://github.com/laladesk/laladesk/tree/master/libs/enigo)**: platforma özgü klavye/fare kontrolü
+- **[src/ui](https://github.com/laladesk/laladesk/tree/master/src/ui)**: GUI
+- **[src/server](https://github.com/laladesk/laladesk/tree/master/src/server)**: ses/pasta/klavye/video hizmetleri ve ağ bağlantıları
+- **[src/client.rs](https://github.com/laladesk/laladesk/tree/master/src/client.rs)**: bir eş bağlantısı başlatır
+- **[src/rendezvous_mediator.rs](https://github.com/laladesk/laladesk/tree/master/src/rendezvous_mediator.rs)**: [laladesk-server](https://github.com/laladesk/laladesk-server) ile iletişim kurar, uzak doğrudan (TCP delik vurma) veya iletme bağlantısını bekler
+- **[src/platform](https://github.com/laladesk/laladesk/tree/master/src/platform)**: platforma özgü kod
+- **[flutter](https://github.com/laladesk/laladesk/tree/master/flutter)**: mobil için Flutter kodu
+- **[flutter/web/js](https://github.com/laladesk/laladesk/tree/master/flutter/web/js)**: Flutter web istemcisi için JavaScript
 
 > [!Dikkat]
 > **Yanlış Kullanım Uyarısı:** <br>
-> RustDesk geliştiricileri, bu yazılımın etik olmayan veya yasa dışı kullanımını onaylamaz veya desteklemez. Yetkisiz erişim, kontrol veya gizlilik ihlali gibi kötüye kullanımlar kesinlikle yönergelerimize aykırıdır. Yazarlar, uygulamanın herhangi bir yanlış kullanımından sorumlu değildir.
+> LaLaDesk geliştiricileri, bu yazılımın etik olmayan veya yasa dışı kullanımını onaylamaz veya desteklemez. Yetkisiz erişim, kontrol veya gizlilik ihlali gibi kötüye kullanımlar kesinlikle yönergelerimize aykırıdır. Yazarlar, uygulamanın herhangi bir yanlış kullanımından sorumlu değildir.
 
 ## Ekran Görüntüleri
 

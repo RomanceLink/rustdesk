@@ -22,7 +22,7 @@ typedef HandleEvent = Future<void> Function(Map<String, dynamic> evt);
 
 class PlatformFFI {
   final _eventHandlers = <String, Map<String, HandleEvent>>{};
-  final RustdeskImpl _ffiBind = RustdeskImpl();
+  final LaladeskImpl _ffiBind = LaladeskImpl();
 
   static String getByName(String name, [String arg = '']) {
     return context.callMethod('getByName', [name, arg]);
@@ -34,25 +34,28 @@ class PlatformFFI {
 
   PlatformFFI._() {
     window.document.addEventListener(
-        'visibilitychange',
-        (event) => {
-              stateGlobal.isWebVisible =
-                  window.document.visibilityState == 'visible'
-            });
+      'visibilitychange',
+      (event) => {
+        stateGlobal.isWebVisible = window.document.visibilityState == 'visible',
+      },
+    );
   }
 
   static final PlatformFFI instance = PlatformFFI._();
 
   static get localeName => window.navigator.language;
-  RustdeskImpl get ffiBind => _ffiBind;
+  LaladeskImpl get ffiBind => _ffiBind;
 
   static Future<String> getVersion() async {
     throw UnimplementedError();
   }
 
   bool registerEventHandler(
-      String eventName, String handlerName, HandleEvent handler,
-      {bool replace = false}) {
+    String eventName,
+    String handlerName,
+    HandleEvent handler, {
+    bool replace = false,
+  }) {
     debugPrint('registerEventHandler $eventName $handlerName');
     var handlers = _eventHandlers[eventName];
     if (handlers == null) {
@@ -105,10 +108,16 @@ class PlatformFFI {
       _ffiBind.sessionNextRgba(sessionId: sessionId, display: display);
   void registerPixelbufferTexture(SessionID sessionId, int display, int ptr) =>
       _ffiBind.sessionRegisterPixelbufferTexture(
-          sessionId: sessionId, display: display, ptr: ptr);
+        sessionId: sessionId,
+        display: display,
+        ptr: ptr,
+      );
   void registerGpuTexture(SessionID sessionId, int display, int ptr) =>
       _ffiBind.sessionRegisterGpuTexture(
-          sessionId: sessionId, display: display, ptr: ptr);
+        sessionId: sessionId,
+        display: display,
+        ptr: ptr,
+      );
 
   Future<void> init(String appType) async {
     Completer completer = Completer();
@@ -164,7 +173,8 @@ class PlatformFFI {
 
   void startDesktopWebListener() {
     mouseListeners.add(
-        window.document.onContextMenu.listen((evt) => evt.preventDefault()));
+      window.document.onContextMenu.listen((evt) => evt.preventDefault()),
+    );
   }
 
   void stopDesktopWebListener() {

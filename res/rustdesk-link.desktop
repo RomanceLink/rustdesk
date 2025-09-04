@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=RustDesk
+Name=LaLaDesk
 NoDisplay=true
-MimeType=x-scheme-handler/rustdesk;
-TryExec=rustdesk
-Exec=rustdesk %u
-Icon=rustdesk
+MimeType=x-scheme-handler/laladesk;
+TryExec=laladesk
+Exec=laladesk %u
+Icon=laladesk
 Terminal=false
 Type=Application
 StartupNotify=false
-StartupWMClass=rustdesk
+StartupWMClass=laladesk
