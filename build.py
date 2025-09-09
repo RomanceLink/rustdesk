@@ -412,6 +412,20 @@ def build_flutter_dmg(version, features):
     os.chdir('flutter')
     system2('flutter build macos --release')
     system2('cp -rf ../target/aarch64-apple-darwin/release/service ./build/macos/Build/Products/Release/LaLaDesk.app/Contents/MacOS/')
+    
+    # 代码签名
+    system2('codesign --deep --force --options=runtime --sign "Developer ID Application: Shenzhen Huolala Technology Company Limited (F75K3ZYHQP)" --timestamp ./build/macos/Build/Products/Release/LaLaDesk.app')
+    
+    # 存储公证凭证
+    system2('xcrun notarytool store-credentials "LaLaDesk" --apple-id "fangqiao.luo@huolala.cn" --team-id F75K3ZYHQP --password "ozxt-xnzp-tvhe-ffje"')
+    
+    # 打包应用
+    system2('ditto -c -k --keepParent ./build/macos/Build/Products/Release/LaLaDesk.app LaLaDesk.zip')
+    
+    # 提交公证
+    system2('xcrun notarytool submit LaLaDesk.zip --keychain-profile "LaLaDesk" --wait')
+    
+    # 创建 DMG 文件
     '''
     system2(
         "create-dmg --volname \"LaLaDesk Installer\" --window-pos 200 120 --window-size 800 400 --icon-size 100 --app-drop-link 600 185 --icon LaLaDesk.app 200 190 --hide-extension LaLaDesk.app laladesk.dmg ./build/macos/Build/Products/Release/LaLaDesk.app")
