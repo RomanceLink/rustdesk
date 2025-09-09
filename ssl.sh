@@ -1,3 +1,17 @@
+./vcpkg install libvpx libyuv opus aom
+
+export VCPKG_ROOT=~/repos/vcpkg
+
+fvm global 3.35.1
+
+export PATH=$HOME/fvm/default/bin:$PATH
+
+flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart --c-output ./flutter/macos/Runner/bridge_generated.h
+
+python3 ./build.py --flutter
+
+
+
 codesign --deep --force --options=runtime \--sign "Developer ID Application: Shenzhen Huolala Technology Company Limited (F75K3ZYHQP)" \
 --timestamp ./LaLaDesk.app
 
