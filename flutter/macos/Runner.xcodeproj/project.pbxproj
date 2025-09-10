@@ -443,6 +443,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../target/profile,
+					../../target/aarch64-apple-darwin/release,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.carriez.laladesk;
@@ -588,6 +589,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../target/debug,
+					../../target/aarch64-apple-darwin/release,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.carriez.laladesk;
@@ -619,6 +621,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../target/release,
+					../../target/aarch64-apple-darwin/release,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_LDFLAGS = (
