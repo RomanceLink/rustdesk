@@ -298,16 +298,18 @@ class _ConnectionPageState extends State<ConnectionPage>
           children: [
             Row(
               children: [
-                if (!isOutgoingOnly)
-                  _buildLocalInfoBox(context).marginOnly(right: 12),
+                if (!isOutgoingOnly) ...[
+                  Expanded(child: _buildLocalInfoBox(context)),
+                  SizedBox(width: 12),
+                ],
                 Expanded(child: _buildRemoteIDTextField(context)),
               ],
             ).marginOnly(top: 22),
             SizedBox(height: 12),
-            Divider().paddingOnly(right: 12),
+            Divider(),
             Expanded(child: PeerTabPage()),
           ],
-        ).paddingOnly(left: 12.0)),
+        ).paddingSymmetric(horizontal: 12.0)),
         if (!isOutgoingOnly) const Divider(height: 1),
         if (!isOutgoingOnly) OnlineStatusWidget()
       ],
@@ -320,7 +322,7 @@ class _ConnectionPageState extends State<ConnectionPage>
     final showOneTime = model.approveMode != 'click' &&
         model.verificationMethod != kUsePermanentPassword;
     return Container(
-      width: 320,
+      height: 180,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(13)),
@@ -428,7 +430,7 @@ class _ConnectionPageState extends State<ConnectionPage>
 
   Widget _buildRemoteIDTextField(BuildContext context) {
     var w = Container(
-      width: 320 + 20 * 2,
+      height: 180,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(13)),
