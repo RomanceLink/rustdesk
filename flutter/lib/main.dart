@@ -166,6 +166,8 @@ void runMainApp(bool startService) async {
     }
     windowManager.setOpacity(1);
     windowManager.setTitle(getWindowName());
+    // 设置最小窗口尺寸，防止继续缩小到布局溢出
+    await windowManager.setMinimumSize(const Size(800, 560));
     // Do not use `windowManager.setResizable()` here.
     setResizable(!bind.isIncomingOnly());
   });

@@ -95,6 +95,7 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
         );
 
     basicWidget() => Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
@@ -114,21 +115,9 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
               width: isIncomingOnly ? 226 : null,
               child: _buildConnStatusMsg(),
             ),
-            // stop
             if (!isIncomingOnly) startServiceWidget(),
-            // ready && public
-            // No need to show the guide if is custom client.
             if (!isIncomingOnly) setupServerWidget(),
           ],
-        );
-
-    // 调试标签：显示原始状态数据，便于定位“未就绪”的原因
-    Widget debugLabel() => Opacity(
-          opacity: 0.6,
-          child: Text(
-            'debug: status_num=$_lastStatusNum, public=${_svcIsUsingPublicServer.value}, video=${stateGlobal.videoConnCount.value}, stopped=${_svcStopped.value}',
-            style: TextStyle(fontSize: 10),
-          ).marginOnly(left: 22.0, top: 2.0),
         );
 
     return Container(
@@ -140,16 +129,12 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
                 Align(
                         child: startServiceWidget(),
                         alignment: Alignment.centerLeft)
-                    .marginOnly(top: 2.0, left: 22.0),
-                debugLabel(),
+                    .marginOnly(top: 2.0, left: 22.0)
               ],
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                basicWidget(),
-                debugLabel(),
-              ],
+          : Align(
+              alignment: Alignment.centerLeft,
+              child: basicWidget(),
             )),
     ).paddingOnly(right: isIncomingOnly ? 8 : 0);
   }

@@ -28,6 +28,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window_size;
 import '../widgets/button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({Key? key}) : super(key: key);
@@ -150,14 +151,31 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.computer_outlined,
-                  size: 18,
-                  color: Theme.of(context).textTheme.titleMedium?.color,
+                  size: 24,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
-                Text('Laladesk', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(width: 20),
+                Text(
+                  'Laladesk',
+                  style: GoogleFonts.poppins(
+                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontSize: (Theme.of(context).textTheme.titleMedium?.fontSize ?? 16) + 4,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                          color: Theme.of(context).colorScheme.primary,
+                        ) ??
+                        TextStyle(
+                          fontSize: (Theme.of(context).textTheme.titleMedium?.fontSize ?? 16) + 4,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ),
               ],
             ),
           ),
