@@ -59,6 +59,7 @@ enum SettingsTabKey {
 
 class DesktopSettingPage extends StatefulWidget {
   final SettingsTabKey initialTabkey;
+  final bool contentOnly;
   static final List<SettingsTabKey> tabKeys = [
     SettingsTabKey.general,
     if (!isWeb &&
@@ -73,7 +74,7 @@ class DesktopSettingPage extends StatefulWidget {
     SettingsTabKey.about,
   ];
 
-  DesktopSettingPage({Key? key, required this.initialTabkey}) : super(key: key);
+  DesktopSettingPage({Key? key, required this.initialTabkey, this.contentOnly = false}) : super(key: key);
 
   @override
   State<DesktopSettingPage> createState() =>
@@ -158,10 +159,25 @@ class _DesktopSettingPageState extends State<DesktopSettingPage>
   }
 
   @override
+  void didUpdateWidget(covariant DesktopSettingPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTabkey != widget.initialTabkey) {
+      int index = DesktopSettingPage.tabKeys.indexOf(widget.initialTabkey);
+      if (index == -1) {
+        index = 0;
+      }
+      selectedTab.value = DesktopSettingPage.tabKeys[index];
+      if (controller.hasClients) {
+        controller.jumpToPage(index);
+      }
+    }
+  }
+
+  @override
   void dispose() {
     super.dispose();
     Get.delete<PageController>(tag: _kSettingPageControllerTag);
-    Get.delete<RxInt>(tag: _kSettingPageTabKeyTag);
+    Get.delete<Rx<SettingsTabKey>>(tag: _kSettingPageTabKeyTag);
     WidgetsBinding.instance.removeObserver(this);
     _videoConnTimer?.cancel();
   }
@@ -252,6 +268,17 @@ class _DesktopSettingPageState extends State<DesktopSettingPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    if (widget.contentOnly) {
+      final children = _children();
+      final int index = DesktopSettingPage.tabKeys.indexOf(selectedTab.value);
+      final Widget child = (index >= 0 && index < children.length)
+          ? children[index]
+          : const SizedBox.shrink();
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: child,
+      );
+    }
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: _buildBlock(

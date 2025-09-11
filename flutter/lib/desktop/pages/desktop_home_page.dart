@@ -8,7 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hbb/common.dart';
 import 'package:flutter_hbb/common/widgets/animated_rotation_widget.dart';
 import 'package:flutter_hbb/common/widgets/custom_password.dart';
+import 'package:flutter_hbb/common/widgets/login.dart';
 import 'package:flutter_hbb/consts.dart';
+// Add hbbs and user model imports for login types and APIs
+import 'package:flutter_hbb/common/hbbs/hbbs.dart';
+import 'package:flutter_hbb/models/user_model.dart';
 import 'package:flutter_hbb/desktop/pages/connection_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_setting_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_tab_page.dart';
@@ -34,6 +38,8 @@ class DesktopHomePage extends StatefulWidget {
 
 const borderColor = Color(0xFF2F65BA);
 
+enum _MainMenu { login, remote, general, display }
+
 class _DesktopHomePageState extends State<DesktopHomePage>
     with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   final _leftPaneScrollController = ScrollController();
@@ -54,6 +60,18 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   final RxBool _block = false.obs;
 
   final GlobalKey _childKey = GlobalKey();
+
+  _MainMenu _selectedMenu = _MainMenu.remote;
+
+  // Login page states
+  final TextEditingController _loginUsername = TextEditingController(text: UserModel.getLocalUserInfo()?['name'] ?? '');
+  final TextEditingController _loginPassword = TextEditingController();
+  final FocusNode _loginUserFocusNode = FocusNode();
+  String? _loginUsernameMsg;
+  String? _loginPasswordMsg;
+  bool _loginInProgress = false;
+  final RxString _curOP = ''.obs;
+  final RxList<dynamic> _loginOptions = <dynamic>[].obs;
 
   @override
   Widget build(BuildContext context) {
@@ -76,113 +94,355 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   Widget buildLeftPane(BuildContext context) {
-    final isIncomingOnly = bind.isIncomingOnly();
     final isOutgoingOnly = bind.isOutgoingOnly();
-    final children = <Widget>[
-      if (!isOutgoingOnly) buildPresetPasswordWarning(),
-      if (bind.isCustomClient())
-        Align(
-          alignment: Alignment.center,
-          child: loadPowered(context),
-        ),
-      Align(
-        alignment: Alignment.center,
-        child: loadLogo(),
-      ),
-      buildTip(context),
-      if (!isOutgoingOnly) buildIDBoard(context),
-      if (!isOutgoingOnly) buildPasswordBoard(context),
-      FutureBuilder<Widget>(
-        future: Future.value(
-            Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
-        builder: (_, data) {
-          if (data.hasData) {
-            if (isIncomingOnly) {
-              if (isInHomePage()) {
-                Future.delayed(Duration(milliseconds: 300), () {
-                  _updateWindowSize();
+    final menuItem = (
+      {required IconData icon, required String label, required _MainMenu key, bool enabled = true}
+    ) {
+      final bool selected = _selectedMenu == key;
+      final Color? baseColor = Theme.of(context).textTheme.titleLarge?.color;
+      final Color iconColor = enabled
+          ? (selected ? Theme.of(context).colorScheme.primary : baseColor?.withOpacity(0.85) ?? Colors.white)
+          : (baseColor?.withOpacity(0.35) ?? Colors.grey);
+      final Color textColor = enabled
+          ? (selected ? Theme.of(context).colorScheme.primary : baseColor?.withOpacity(0.85) ?? Colors.white)
+          : (baseColor?.withOpacity(0.35) ?? Colors.grey);
+      return InkWell(
+        onTap: enabled
+            ? () {
+                setState(() {
+                  _selectedMenu = key;
                 });
               }
-            }
-            return data.data!;
-          } else {
-            return const Offstage();
-          }
-        },
-      ),
-      buildPluginEntry(),
-    ];
-    if (isIncomingOnly) {
-      children.addAll([
-        Divider(),
-        OnlineStatusWidget(
-          onSvcStatusChanged: () {
-            if (isInHomePage()) {
-              Future.delayed(Duration(milliseconds: 300), () {
-                _updateWindowSize();
-              });
-            }
-          },
-        ).marginOnly(bottom: 6, right: 6)
-      ]);
-    }
-    final textColor = Theme.of(context).textTheme.titleLarge?.color;
-    return ChangeNotifierProvider.value(
-      value: gFFI.serverModel,
-      child: Container(
-        width: isIncomingOnly ? 280.0 : 200.0,
-        color: Theme.of(context).colorScheme.background,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SingleChildScrollView(
-                  controller: _leftPaneScrollController,
-                  child: Column(
-                    key: _childKey,
-                    children: children,
-                  ),
+            : null,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: selected ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 20, color: iconColor),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  translate(label),
+                  style: TextStyle(fontSize: 14, color: textColor),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Expanded(child: Container())
+              ),
+            ],
+          ),
+        ),
+      );
+    };
+
+    final menuList = Obx(() {
+      final isLogin = gFFI.userModel.isLogin;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 14),
+          // Logo (optional)
+          Align(alignment: Alignment.center, child: loadLogo()),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.computer_outlined,
+                  size: 18,
+                  color: Theme.of(context).textTheme.titleMedium?.color,
+                ),
+                const SizedBox(width: 8),
+                Text('Laladesk', style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
-            if (isOutgoingOnly)
-              Positioned(
-                bottom: 6,
-                left: 12,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    child: Obx(
-                      () => Icon(
-                        Icons.settings,
-                        color: _editHover.value
-                            ? textColor
-                            : Colors.grey.withOpacity(0.5),
-                        size: 22,
-                      ),
-                    ),
-                    onTap: () => {
-                      if (DesktopSettingPage.tabKeys.isNotEmpty)
-                        {
-                          DesktopSettingPage.switch2page(
-                              DesktopSettingPage.tabKeys[0])
-                        }
-                    },
-                    onHover: (value) => _editHover.value = value,
-                  ),
-                ),
-              )
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: menuItem(icon: Icons.person_outline, label: translate('Login'), key: _MainMenu.login, enabled: true),
+          ),
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: menuItem(
+                icon: Icons.screen_share_outlined,
+                label: translate('Remote'),
+                key: _MainMenu.remote,
+                enabled: isLogin),
+          ),
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: menuItem(icon: Icons.settings_outlined, label: translate('General'), key: _MainMenu.general, enabled: true),
+          ),
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: menuItem(icon: Icons.monitor_outlined, label: translate('Display'), key: _MainMenu.display, enabled: true),
+          ),
+          const SizedBox(height: 10),
+          if (!isOutgoingOnly)
+            Divider().marginSymmetric(horizontal: 10),
+        ],
+      );
+    });
+
+    return Container(
+      width: 230,
+      color: Theme.of(context).colorScheme.background,
+      child: SingleChildScrollView(
+        controller: _leftPaneScrollController,
+        child: menuList,
       ),
     );
   }
 
   buildRightPane(BuildContext context) {
+    switch (_selectedMenu) {
+      case _MainMenu.login:
+        return _buildLoginPane(context);
+      case _MainMenu.remote:
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: ConnectionPage(),
+        );
+      case _MainMenu.general:
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: DesktopSettingPage(initialTabkey: SettingsTabKey.general, contentOnly: true),
+        );
+      case _MainMenu.display:
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: DesktopSettingPage(initialTabkey: SettingsTabKey.display, contentOnly: true),
+        );
+    }
+  }
+
+  Widget _buildLoginPane(BuildContext context) {
+    // hydrate login options on first build
+    if (_loginOptions.isEmpty) {
+      Future.microtask(() async {
+        _loginOptions.value = await UserModel.queryOidcLoginOptions();
+      });
+    }
+
+    Future<void> handleLoginResponse(LoginResponse resp, bool storeIfAccessToken) async {
+      switch (resp.type) {
+        case HttpType.kAuthResTypeToken:
+          if (resp.access_token != null) {
+            if (storeIfAccessToken) {
+              await bind.mainSetLocalOption(key: 'access_token', value: resp.access_token!);
+              await bind.mainSetLocalOption(key: 'user_info', value: jsonEncode(resp.user ?? {}));
+            }
+            await UserModel.updateOtherModels();
+            setState(() {
+              // After login, auto switch to Remote Assist
+              _selectedMenu = _MainMenu.remote;
+            });
+            return;
+          }
+          break;
+        case HttpType.kAuthResTypeEmailCheck:
+          bool? isEmailVerification;
+          if (resp.tfa_type == null || resp.tfa_type == HttpType.kAuthResTypeEmailCheck) {
+            isEmailVerification = true;
+          } else if (resp.tfa_type == HttpType.kAuthResTypeTfaCheck) {
+            isEmailVerification = false;
+          } else {
+            _loginPasswordMsg = "Failed, bad tfa type from server";
+          }
+          if (isEmailVerification != null) {
+            if (isMobile) {
+              verificationCodeDialog(resp.user, resp.secret, isEmailVerification);
+            } else {
+              final res = await verificationCodeDialog(resp.user, resp.secret, isEmailVerification);
+              if (res == true) {
+                return;
+              }
+            }
+          }
+          break;
+        default:
+          _loginPasswordMsg = "Failed, bad response from server";
+          break;
+      }
+    }
+
+    Future<void> onLogin() async {
+      if (_loginUsername.text.isEmpty) {
+        setState(() => _loginUsernameMsg = translate('Username missed'));
+        return;
+      }
+      if (_loginPassword.text.isEmpty) {
+        setState(() => _loginPasswordMsg = translate('Password missed'));
+        return;
+      }
+      _curOP.value = 'laladesk';
+      setState(() => _loginInProgress = true);
+      try {
+        final resp = await gFFI.userModel.login(LoginRequest(
+            username: _loginUsername.text,
+            password: _loginPassword.text,
+            id: await bind.mainGetMyId(),
+            uuid: await bind.mainGetUuid(),
+            autoLogin: true,
+            type: HttpType.kAuthReqTypeAccount));
+        await handleLoginResponse(resp, true);
+      } on RequestException catch (err) {
+        _loginPasswordMsg = translate(err.cause);
+      } catch (err) {
+        _loginPasswordMsg = "Unknown Error: $err";
+      }
+      _curOP.value = '';
+      setState(() => _loginInProgress = false);
+    }
+
+    final thirdAuthWidget = Obx(() {
+      return Offstage(
+        offstage: _loginOptions.isEmpty,
+        child: Column(
+          children: [
+            const SizedBox(height: 8.0),
+            Center(child: Text(translate('or'), style: TextStyle(fontSize: 16))),
+            const SizedBox(height: 8.0),
+            LoginWidgetOP(
+              ops: _loginOptions.map((e) => ConfigOP(op: e[ 'name' ], icon: e[ 'icon' ])).toList(),
+              curOP: _curOP,
+              cbLogin: (Map<String, dynamic> authBody) async {
+                LoginResponse? resp;
+                try {
+                  resp = gFFI.userModel.getLoginResponseFromAuthBody(authBody);
+                } catch (e) {
+                  debugPrint('Failed to parse oidc login body: "$authBody"');
+                }
+                if (resp != null) {
+                  await handleLoginResponse(resp, false);
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    });
+
+    _loginUsername.addListener(() {
+      if (_loginUsernameMsg != null) setState(() => _loginUsernameMsg = null);
+    });
+    _loginPassword.addListener(() {
+      if (_loginPasswordMsg != null) setState(() => _loginPasswordMsg = null);
+    });
+
+    return Obx(() {
+      // When logged in, show user info + logout instead of login form
+      if (gFFI.userModel.isLogin) {
+        return _buildLoggedInPane(context);
+      }
+      // Not logged in: show login form
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 8.0),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 480),
+                child: LoginWidgetUserPass(
+                  username: _loginUsername,
+                  pass: _loginPassword,
+                  usernameMsg: _loginUsernameMsg,
+                  passMsg: _loginPasswordMsg,
+                  isInProgress: _loginInProgress,
+                  curOP: _curOP,
+                  onLogin: onLogin,
+                  userFocusNode: _loginUserFocusNode,
+                ),
+              ),
+              ConstrainedBox(constraints: const BoxConstraints(maxWidth: 480), child: thirdAuthWidget),
+              const SizedBox(height: 16),
+              // Permissions / Help cards moved from left pane to Login page
+              Obx(() => buildHelpCards(stateGlobal.updateUrl.value)),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildLoggedInPane(BuildContext context) {
+    final name = gFFI.userModel.userName.value;
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: ConnectionPage(),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 24),
+              Card(
+                elevation: 0,
+                color: Theme.of(context).colorScheme.surface,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        child: Icon(Icons.person_outline),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name.isEmpty ? translate('User') : name,
+                              style: Theme.of(context).textTheme.titleMedium,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              translate('Logged in'),
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      FilledButton.icon(
+                        onPressed: () async {
+                          await gFFI.userModel.logOut();
+                          if (mounted) {
+                            setState(() {
+                              _selectedMenu = _MainMenu.login;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.logout),
+                        label: Text(translate('Logout')),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Keep help cards visible for quick access
+              Obx(() => buildHelpCards(stateGlobal.updateUrl.value)),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -692,6 +952,10 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   @override
   void initState() {
     super.initState();
+    // Default to Login page if not logged in
+    if (!gFFI.userModel.isLogin) {
+      _selectedMenu = _MainMenu.login;
+    }
     _updateTimer = periodic_immediate(const Duration(seconds: 1), () async {
       await gFFI.serverModel.fetchID();
       final error = await bind.mainGetError();

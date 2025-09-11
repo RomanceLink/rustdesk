@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hbb/common/widgets/connection_page_title.dart';
 import 'package:flutter_hbb/consts.dart';
 import 'package:flutter_hbb/desktop/widgets/popup_menu.dart';
@@ -13,12 +14,14 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_hbb/models/peer_model.dart';
+import 'package:flutter_hbb/desktop/pages/desktop_setting_page.dart' show DesktopSettingPage, SettingsTabKey;
 
 import '../../common.dart';
 import '../../common/formatter/id_formatter.dart';
 import '../../common/widgets/peer_tab_page.dart';
 import '../../common/widgets/autocomplete.dart';
 import '../../models/platform_model.dart';
+import '../../models/server_model.dart' show kUsePermanentPassword;
 import '../../desktop/widgets/material_mod_popup_menu.dart' as mod_menu;
 
 class OnlineStatusWidget extends StatefulWidget {
@@ -292,7 +295,9 @@ class _ConnectionPageState extends State<ConnectionPage>
           children: [
             Row(
               children: [
-                Flexible(child: _buildRemoteIDTextField(context)),
+                if (!isOutgoingOnly)
+                  _buildLocalInfoBox(context).marginOnly(right: 12),
+                Expanded(child: _buildRemoteIDTextField(context)),
               ],
             ).marginOnly(top: 22),
             SizedBox(height: 12),
@@ -306,12 +311,114 @@ class _ConnectionPageState extends State<ConnectionPage>
     );
   }
 
-  /// Callback for the connect button.
-  /// Connects to the selected peer.
-  void onConnect(
-      {bool isFileTransfer = false,
-      bool isViewCamera = false,
-      bool isTerminal = false}) {
+  Widget _buildLocalInfoBox(BuildContext context) {
+    final model = gFFI.serverModel;
+    final textColor = Theme.of(context).textTheme.titleLarge?.color;
+    final showOneTime = model.approveMode != 'click' &&
+        model.verificationMethod != kUsePermanentPassword;
+    return Container(
+      width: 320,
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(13)),
+          border: Border.all(color: Theme.of(context).colorScheme.background)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ID
+          Container(
+            height: 25,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '本设备识别码',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.color
+                          ?.withOpacity(0.5)),
+                ).marginOnly(top: 5),
+                InkWell(
+                  onTap: () async {
+                    final userName = gFFI.userModel.userName.value;
+                    final name = (userName.isNotEmpty) ? userName : await bind.mainGetMyId();
+                    final code = model.serverId.text;
+                    final otp = model.serverPasswd.text;
+                    final msg = '${name}邀请您进行远程控制\nLalaDesk设备代码:${code}\n临时密码:${otp}';
+                    await Clipboard.setData(ClipboardData(text: msg));
+                    showToast(translate('Copied'));
+                  },
+                  child: Icon(Icons.ios_share, size: 18, color: Theme.of(context).textTheme.titleLarge?.color?.withOpacity(0.6)),
+                ).marginOnly(top: 2),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onDoubleTap: () {
+              Clipboard.setData(ClipboardData(text: model.serverId.text));
+              showToast(translate("Copied"));
+            },
+            child: TextFormField(
+              controller: model.serverId,
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 10, bottom: 10),
+                filled: false,
+              ),
+              style: const TextStyle(fontSize: 22),
+            ).workaroundFreezeLinuxMint(),
+          ),
+          const SizedBox(height: 8),
+          // One-time password
+          Text(
+            translate("One-time Password"),
+            style: TextStyle(fontSize: 14, color: textColor?.withOpacity(0.5)),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onDoubleTap: () {
+                    if (showOneTime) {
+                      Clipboard.setData(ClipboardData(text: model.serverPasswd.text));
+                      showToast(translate("Copied"));
+                    }
+                  },
+                  child: TextFormField(
+                    controller: model.serverPasswd,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(top: 14, bottom: 10),
+                      filled: false,
+                    ),
+                    style: const TextStyle(fontSize: 15),
+                  ).workaroundFreezeLinuxMint(),
+                ),
+              ),
+              if (showOneTime)
+                InkWell(
+                  child: Icon(Icons.refresh, color: const Color(0xFFDDDDDD), size: 22).marginOnly(right: 8, top: 4),
+                  onTap: () => bind.mainUpdateTemporaryPassword(),
+                ),
+              if (!bind.isDisableSettings())
+                InkWell(
+                  child: Icon(Icons.edit, color: const Color(0xFFDDDDDD), size: 22).marginOnly(right: 0, top: 4),
+                  onTap: () => DesktopSettingPage.switch2page(SettingsTabKey.safety),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void onConnect({bool isFileTransfer = false, bool isViewCamera = false, bool isTerminal = false}) {
     var id = _idController.id;
     connect(context, id,
         isFileTransfer: isFileTransfer,
@@ -319,8 +426,6 @@ class _ConnectionPageState extends State<ConnectionPage>
         isTerminal: isTerminal);
   }
 
-  /// UI for the remote ID TextField.
-  /// Search for a peer.
   Widget _buildRemoteIDTextField(BuildContext context) {
     var w = Container(
       width: 320 + 20 * 2,
@@ -331,6 +436,7 @@ class _ConnectionPageState extends State<ConnectionPage>
       child: Ink(
         child: Column(
           children: [
+            // 在输入框上方添加多语言标题（控制远程桌面）
             getConnectionPageTitle(context, false).marginOnly(bottom: 15),
             Row(
               children: [
