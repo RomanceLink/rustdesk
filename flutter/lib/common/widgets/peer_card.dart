@@ -914,7 +914,6 @@ class RecentPeerCard extends BasePeerCard {
       BuildContext context) async {
     final List<MenuEntryBase<String>> menuItems = [
       _connectAction(context),
-      _transferFileAction(context),
       _viewCameraAction(context),
       _terminalAction(context),
     ];
@@ -979,7 +978,6 @@ class FavoritePeerCard extends BasePeerCard {
       BuildContext context) async {
     final List<MenuEntryBase<String>> menuItems = [
       _connectAction(context),
-      _transferFileAction(context),
       _viewCameraAction(context),
       _terminalAction(context),
     ];
@@ -1039,7 +1037,6 @@ class DiscoveredPeerCard extends BasePeerCard {
       BuildContext context) async {
     final List<MenuEntryBase<String>> menuItems = [
       _connectAction(context),
-      _transferFileAction(context),
       _viewCameraAction(context),
       _terminalAction(context),
     ];
@@ -1098,7 +1095,6 @@ class AddressBookPeerCard extends BasePeerCard {
       BuildContext context) async {
     final List<MenuEntryBase<String>> menuItems = [
       _connectAction(context),
-      _transferFileAction(context),
       _viewCameraAction(context),
       _terminalAction(context),
     ];
@@ -1239,7 +1235,6 @@ class MyGroupPeerCard extends BasePeerCard {
       BuildContext context) async {
     final List<MenuEntryBase<String>> menuItems = [
       _connectAction(context),
-      _transferFileAction(context),
       _viewCameraAction(context),
       _terminalAction(context),
     ];
