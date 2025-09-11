@@ -39,6 +39,7 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
   final _svcStopped = Get.find<RxBool>(tag: 'stop-service');
   final _svcIsUsingPublicServer = true.obs;
   Timer? _updateTimer;
+  int _lastStatusNum = 0; // 调试用：记录最近一次状态码
 
   double get em => 14.0;
   double? get height => bind.isIncomingOnly() ? null : em * 3;
@@ -121,6 +122,15 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
           ],
         );
 
+    // 调试标签：显示原始状态数据，便于定位“未就绪”的原因
+    Widget debugLabel() => Opacity(
+          opacity: 0.6,
+          child: Text(
+            'debug: status_num=$_lastStatusNum, public=${_svcIsUsingPublicServer.value}, video=${stateGlobal.videoConnCount.value}, stopped=${_svcStopped.value}',
+            style: TextStyle(fontSize: 10),
+          ).marginOnly(left: 22.0, top: 2.0),
+        );
+
     return Container(
       height: height,
       child: Obx(() => isIncomingOnly
@@ -131,9 +141,16 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
                         child: startServiceWidget(),
                         alignment: Alignment.centerLeft)
                     .marginOnly(top: 2.0, left: 22.0),
+                debugLabel(),
               ],
             )
-          : basicWidget()),
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                basicWidget(),
+                debugLabel(),
+              ],
+            )),
     ).paddingOnly(right: isIncomingOnly ? 8 : 0);
   }
 
@@ -155,6 +172,7 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
     final status =
         jsonDecode(await bind.mainGetConnectStatus()) as Map<String, dynamic>;
     final statusNum = status['status_num'] as int;
+    _lastStatusNum = statusNum; // 记录调试状态码
     if (statusNum == 0) {
       stateGlobal.svcStatus.value = SvcStatus.connecting;
     } else if (statusNum == -1) {
@@ -403,14 +421,11 @@ class _ConnectionPageState extends State<ConnectionPage>
               ),
               if (showOneTime)
                 InkWell(
-                  child: Icon(Icons.refresh, color: const Color(0xFFDDDDDD), size: 22).marginOnly(right: 8, top: 4),
+                  child: Icon(Icons.refresh, color: const Color(0xFFDDDDDD), size: 18).marginOnly(right: 0, top: 2),
                   onTap: () => bind.mainUpdateTemporaryPassword(),
                 ),
               if (!bind.isDisableSettings())
-                InkWell(
-                  child: Icon(Icons.edit, color: const Color(0xFFDDDDDD), size: 22).marginOnly(right: 0, top: 4),
-                  onTap: () => DesktopSettingPage.switch2page(SettingsTabKey.safety),
-                ),
+                SizedBox.shrink(),
             ],
           ),
         ],
