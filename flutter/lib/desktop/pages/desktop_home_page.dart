@@ -153,10 +153,10 @@ class _DesktopHomePageState extends State<DesktopHomePage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.computer_outlined,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.primary,
+                Image.asset(
+                  'assets/images/64x64.png',
+                  width: 24,
+                  height: 24,
                 ),
                 const SizedBox(width: 20),
                 Text(
