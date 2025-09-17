@@ -336,6 +336,7 @@ class _ConnectionPageState extends State<ConnectionPage>
                 ),
               ),
             ),
+            SizedBox(height: 8),
           ],
         ).paddingSymmetric(horizontal: 12.0)),
         if (!isOutgoingOnly) const Divider(height: 1),
