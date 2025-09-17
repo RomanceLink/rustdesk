@@ -65,7 +65,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   _MainMenu _selectedMenu = _MainMenu.remote;
 
   // Login page states
-  final TextEditingController _loginUsername = TextEditingController(text: UserModel.getLocalUserInfo()?['name'] ?? '');
+  final TextEditingController _loginUsername =
+      TextEditingController(text: UserModel.getLocalUserInfo()?['name'] ?? '');
   final TextEditingController _loginPassword = TextEditingController();
   final FocusNode _loginUserFocusNode = FocusNode();
   String? _loginUsernameMsg;
@@ -97,15 +98,21 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   Widget buildLeftPane(BuildContext context) {
     final isOutgoingOnly = bind.isOutgoingOnly();
     final menuItem = (
-      {required IconData icon, required String label, required _MainMenu key, bool enabled = true}
-    ) {
+        {required IconData icon,
+        required String label,
+        required _MainMenu key,
+        bool enabled = true}) {
       final bool selected = _selectedMenu == key;
       final Color? baseColor = Theme.of(context).textTheme.titleLarge?.color;
       final Color iconColor = enabled
-          ? (selected ? Theme.of(context).colorScheme.primary : baseColor?.withOpacity(0.85) ?? Colors.white)
+          ? (selected
+              ? Theme.of(context).colorScheme.primary
+              : baseColor?.withOpacity(0.85) ?? Colors.white)
           : (baseColor?.withOpacity(0.35) ?? Colors.grey);
       final Color textColor = enabled
-          ? (selected ? Theme.of(context).colorScheme.primary : baseColor?.withOpacity(0.85) ?? Colors.white)
+          ? (selected
+              ? Theme.of(context).colorScheme.primary
+              : baseColor?.withOpacity(0.85) ?? Colors.white)
           : (baseColor?.withOpacity(0.35) ?? Colors.grey);
       return InkWell(
         onTap: enabled
@@ -119,7 +126,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
-            color: selected ? Theme.of(context).colorScheme.primary.withOpacity(0.08) : Colors.transparent,
+            color: selected
+                ? Theme.of(context).colorScheme.primary.withOpacity(0.08)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -160,20 +169,26 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                 ),
                 const SizedBox(width: 20),
                 Text(
-                  'Laladesk',
+                  '货拉拉远程桌面工具',
                   style: GoogleFonts.poppins(
-                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontSize: (Theme.of(context).textTheme.titleMedium?.fontSize ?? 16) + 4,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                          color: Theme.of(context).colorScheme.primary,
-                        ) ??
-                        TextStyle(
-                          fontSize: (Theme.of(context).textTheme.titleMedium?.fontSize ?? 16) + 4,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                    textStyle:
+                        Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ) ??
+                            TextStyle(
+                              fontSize: (Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.fontSize ??
+                                      16) +
+                                  4,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                   ),
                 ),
               ],
@@ -182,7 +197,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: menuItem(icon: Icons.person_outline, label: translate('Login'), key: _MainMenu.login, enabled: true),
+            child: menuItem(
+                icon: Icons.person_outline,
+                label: translate('Login'),
+                key: _MainMenu.login,
+                enabled: true),
           ),
           const SizedBox(height: 6),
           Padding(
@@ -196,16 +215,23 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           const SizedBox(height: 6),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: menuItem(icon: Icons.settings_outlined, label: translate('General'), key: _MainMenu.general, enabled: true),
+            child: menuItem(
+                icon: Icons.settings_outlined,
+                label: translate('General'),
+                key: _MainMenu.general,
+                enabled: true),
           ),
           const SizedBox(height: 6),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: menuItem(icon: Icons.monitor_outlined, label: translate('Display'), key: _MainMenu.display, enabled: true),
+            child: menuItem(
+                icon: Icons.monitor_outlined,
+                label: translate('Display'),
+                key: _MainMenu.display,
+                enabled: true),
           ),
           const SizedBox(height: 10),
-          if (!isOutgoingOnly)
-            Divider().marginSymmetric(horizontal: 10),
+          if (!isOutgoingOnly) Divider().marginSymmetric(horizontal: 10),
         ],
       );
     });
@@ -232,12 +258,14 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       case _MainMenu.general:
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: DesktopSettingPage(initialTabkey: SettingsTabKey.general, contentOnly: true),
+          child: DesktopSettingPage(
+              initialTabkey: SettingsTabKey.general, contentOnly: true),
         );
       case _MainMenu.display:
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: DesktopSettingPage(initialTabkey: SettingsTabKey.display, contentOnly: true),
+          child: DesktopSettingPage(
+              initialTabkey: SettingsTabKey.display, contentOnly: true),
         );
     }
   }
@@ -250,13 +278,16 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       });
     }
 
-    Future<void> handleLoginResponse(LoginResponse resp, bool storeIfAccessToken) async {
+    Future<void> handleLoginResponse(
+        LoginResponse resp, bool storeIfAccessToken) async {
       switch (resp.type) {
         case HttpType.kAuthResTypeToken:
           if (resp.access_token != null) {
             if (storeIfAccessToken) {
-              await bind.mainSetLocalOption(key: 'access_token', value: resp.access_token!);
-              await bind.mainSetLocalOption(key: 'user_info', value: jsonEncode(resp.user ?? {}));
+              await bind.mainSetLocalOption(
+                  key: 'access_token', value: resp.access_token!);
+              await bind.mainSetLocalOption(
+                  key: 'user_info', value: jsonEncode(resp.user ?? {}));
             }
             await UserModel.updateOtherModels();
             setState(() {
@@ -268,7 +299,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           break;
         case HttpType.kAuthResTypeEmailCheck:
           bool? isEmailVerification;
-          if (resp.tfa_type == null || resp.tfa_type == HttpType.kAuthResTypeEmailCheck) {
+          if (resp.tfa_type == null ||
+              resp.tfa_type == HttpType.kAuthResTypeEmailCheck) {
             isEmailVerification = true;
           } else if (resp.tfa_type == HttpType.kAuthResTypeTfaCheck) {
             isEmailVerification = false;
@@ -277,9 +309,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           }
           if (isEmailVerification != null) {
             if (isMobile) {
-              verificationCodeDialog(resp.user, resp.secret, isEmailVerification);
+              verificationCodeDialog(
+                  resp.user, resp.secret, isEmailVerification);
             } else {
-              final res = await verificationCodeDialog(resp.user, resp.secret, isEmailVerification);
+              final res = await verificationCodeDialog(
+                  resp.user, resp.secret, isEmailVerification);
               if (res == true) {
                 return;
               }
@@ -327,10 +361,13 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         child: Column(
           children: [
             const SizedBox(height: 8.0),
-            Center(child: Text(translate('or'), style: TextStyle(fontSize: 16))),
+            Center(
+                child: Text(translate('or'), style: TextStyle(fontSize: 16))),
             const SizedBox(height: 8.0),
             LoginWidgetOP(
-              ops: _loginOptions.map((e) => ConfigOP(op: e[ 'name' ], icon: e[ 'icon' ])).toList(),
+              ops: _loginOptions
+                  .map((e) => ConfigOP(op: e['name'], icon: e['icon']))
+                  .toList(),
               curOP: _curOP,
               cbLogin: (Map<String, dynamic> authBody) async {
                 LoginResponse? resp;
@@ -383,7 +420,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                   userFocusNode: _loginUserFocusNode,
                 ),
               ),
-              ConstrainedBox(constraints: const BoxConstraints(maxWidth: 480), child: thirdAuthWidget),
+              ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: thirdAuthWidget),
               const SizedBox(height: 16),
               // Permissions / Help cards moved from left pane to Login page
               Obx(() => buildHelpCards(stateGlobal.updateUrl.value)),
@@ -429,8 +468,15 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                             const SizedBox(height: 4),
                             Text(
                               translate('Logged in'),
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color
+                                        ?.withOpacity(0.7),
                                   ),
                             ),
                           ],
@@ -531,7 +577,6 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       ),
     );
   }
-
 
 // 去除右上角设置按钮的实现
 
