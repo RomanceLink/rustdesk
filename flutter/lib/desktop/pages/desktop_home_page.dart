@@ -39,7 +39,7 @@ class DesktopHomePage extends StatefulWidget {
 
 const borderColor = Color(0xFF2F65BA);
 
-enum _MainMenu { login, remote, general, display }
+enum _MainMenu { login, remote }
 
 class _DesktopHomePageState extends State<DesktopHomePage>
     with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
@@ -193,16 +193,6 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                 key: _MainMenu.remote,
                 enabled: isLogin),
           ),
-          const SizedBox(height: 6),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: menuItem(icon: Icons.settings_outlined, label: translate('General'), key: _MainMenu.general, enabled: true),
-          ),
-          const SizedBox(height: 6),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: menuItem(icon: Icons.monitor_outlined, label: translate('Display'), key: _MainMenu.display, enabled: true),
-          ),
           const SizedBox(height: 10),
           if (!isOutgoingOnly)
             Divider().marginSymmetric(horizontal: 10),
@@ -228,16 +218,6 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
           child: ConnectionPage(),
-        );
-      case _MainMenu.general:
-        return Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: DesktopSettingPage(initialTabkey: SettingsTabKey.general, contentOnly: true),
-        );
-      case _MainMenu.display:
-        return Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: DesktopSettingPage(initialTabkey: SettingsTabKey.display, contentOnly: true),
         );
     }
   }
