@@ -160,10 +160,10 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                 ),
                 const SizedBox(width: 20),
                 Text(
-                  'Laladesk',
+                  '货拉拉远程桌面工具',
                   style: GoogleFonts.poppins(
                     textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontSize: (Theme.of(context).textTheme.titleMedium?.fontSize ?? 16) + 4,
+                          fontSize: 16,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
                           color: Theme.of(context).colorScheme.primary,
