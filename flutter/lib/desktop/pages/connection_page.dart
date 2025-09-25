@@ -324,12 +324,12 @@ class _ConnectionPageState extends State<ConnectionPage>
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      '1. 该软件仅限公司内部使用，禁止对外分享',
+                      '1.本软件仅供公司内部使用，请勿随意对外传播。',
                       style: TextStyle(fontSize: 14, height: 1.6, color: Theme.of(context).textTheme.titleLarge?.color?.withOpacity(0.85)),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '2. 请在公司内网或连接安心连后使用',
+                      '2.建议在公司内网或连接安心连后使用，以确保最佳体验和信息安全。',
                       style: TextStyle(fontSize: 14, height: 1.6, color: Theme.of(context).textTheme.titleLarge?.color?.withOpacity(0.85)),
                     ),
                   ],
