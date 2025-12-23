@@ -24,7 +24,8 @@ else:
     flutter_build_dir = 'build/linux/x64/release/bundle/'
 flutter_build_dir_2 = f'flutter/{flutter_build_dir}'
 skip_cargo = False
-
+arch = os.environ.get("HBB_MACOS_ARCH", "x86_64")
+target = f"{arch}-apple-darwin"
 
 def get_deb_arch() -> str:
     custom_arch = os.environ.get("DEB_ARCH")
@@ -405,13 +406,15 @@ def build_flutter_dmg(version, features):
     if not skip_cargo:
         # set minimum osx build target, now is 10.14, which is the same as the flutter xcode project
                 system2(
-            f'MACOSX_DEPLOYMENT_TARGET=10.14 cargo build --features {features} --target aarch64-apple-darwin --release')
+                    f"MACOSX_DEPLOYMENT_TARGET=10.14 cargo build "
+                    f"--features {features} --target {arch}-apple-darwin --release"
+                )
     # copy dylib
     system2(
-        "cp target/aarch64-apple-darwin/release/libliblaladesk.dylib target/release/liblaladesk.dylib")
+        f"cp target/{target}/release/libliblaladesk.dylib target/release/libliblaladesk.dylib")
     os.chdir('flutter')
     system2('flutter build macos --release')
-    system2('cp -rf ../target/aarch64-apple-darwin/release/service ./build/macos/Build/Products/Release/LaLaDesk.app/Contents/MacOS/')
+    system2(f'cp -rf ../target/{target}/release/service ./build/macos/Build/Products/Release/LaLaDesk.app/Contents/MacOS/')
     
     # 代码签名
     system2('codesign --deep --force --options=runtime --sign "Developer ID Application: Shenzhen Huolala Technology Company Limited (F75K3ZYHQP)" --timestamp ./build/macos/Build/Products/Release/LaLaDesk.app')
