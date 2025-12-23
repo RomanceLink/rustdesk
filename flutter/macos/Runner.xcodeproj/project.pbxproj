@@ -378,8 +378,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ARCHS = x86_64;
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "arm64";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -443,7 +443,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../target/profile,
-					../../target/aarch64-apple-darwin/release,
+					"../../target/$(NATIVE_ARCH_ACTUAL)-apple-darwin/release",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.carriez.laladesk;
@@ -466,7 +466,7 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "arm64";
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -520,7 +520,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "arm64";
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -589,7 +589,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../target/debug,
-					../../target/aarch64-apple-darwin/release,
+					"../../target/$(NATIVE_ARCH_ACTUAL)-apple-darwin/release",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.carriez.laladesk;
@@ -621,7 +621,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../target/release,
-					../../target/aarch64-apple-darwin/release,
+					"../../target/$(NATIVE_ARCH_ACTUAL)-apple-darwin/release",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_LDFLAGS = (

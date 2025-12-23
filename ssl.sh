@@ -1,6 +1,6 @@
 ./vcpkg install libvpx libyuv opus aom
 
-export VCPKG_ROOT=~/vcpkg
+export VCPKG_ROOT=~/workspace/vcpkg
 
 fvm global 3.35.1
 
